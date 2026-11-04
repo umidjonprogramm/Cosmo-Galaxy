@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign Up / Log In</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+  }
+
+  body {
+    font-family: 'Inter', Arial, sans-serif;
+    color: #fff;
+    background: #1c1c1c;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Orqa fondagi video uchun maxsus konteyner */
+  .video-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+  }
+
+  .video-background video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+  }
+
+  .video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 0;
+  }
+
+  .card {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    z-index: 1;
+  }
+
+  .left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5); 
+  }
+  .left h1 { font-size: clamp(32px, 3.4vw, 52px); font-weight: 400; line-height: 1.15; margin-bottom: 14px; }
+  .left p  { font-size: clamp(16px, 1.4vw, 20px); font-weight: 300; line-height: 1.3; max-width: 520px; }
+
+  .right {
+    padding: 60px;
+    background: rgba(20, 20, 20, 0.45);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .right form { width: 100%; max-width: 520px; }
+  .right h2 { font-size: clamp(32px, 3vw, 46px); font-weight: 400; margin-bottom: 50px; }
+
+  .field {
+    position: relative;
+    border-bottom: 1px solid rgba(255,255,255,.7);
+    margin-bottom: 38px;
+  }
+  .field input {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    color: #fff;
+    font: inherit;
+    font-size: 18px;
+    padding: 14px 40px 14px 0;
+  }
+  .field input::placeholder { color: rgba(255,255,255,.55); }
+  .field svg {
+    position: absolute;
+    right: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 22px; height: 22px;
+    fill: rgba(255,255,255,.85);
+  }
+  .field:focus-within { border-bottom-color: #fff; }
+
+  .terms {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: rgba(255,255,255,.85);
+    margin-bottom: 30px;
+    cursor: pointer;
+  }
+  .terms input {
+    appearance: none;
+    width: 20px; height: 20px;
+    border: 1.5px solid #fff;
+    border-radius: 3px;
+    background: transparent;
+    cursor: pointer;
+    display: grid; place-items: center;
+  }
+  .terms input:checked::after { content: "✓"; font-size: 14px; }
+  .terms b { font-weight: 600; color: #fff; }
+
+  .actions { display: flex; align-items: center; gap: 70px; }
+  .btn {
+    background: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 30px;
+    padding: 10px 26px;
+    font: inherit;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+  }
+  .btn:hover { background: #fff; color: #222; }
+  .link { color: #fff; font-size: 15px; text-decoration: underline; cursor: pointer; }
+
+  .msg { margin-top: 18px; font-size: 14px; min-height: 18px; color: #ffd27a; }
+
+  @media (max-width: 800px) {
+    body { overflow-y: auto; }
+    .card { grid-template-columns: 1fr; height: auto; min-height: 100vh; }
+    .left { padding: 60px 28px 20px; }
+    .right { padding: 40px 28px 50px; background: rgba(20, 20, 20, 0.7); }
+    .actions { gap: 30px; flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Video Background Qismi -->
+<div class="video-background">
+  <video autoplay muted loop playsinline>
+    <source src="./video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <div class="video-overlay"></div>
+</div>
+
+<div class="card">
+  <section class="left">
+    <h1>Don't Have An Account?</h1>
+    <p>Register to access all the features of our service. Manage your business in one place. It's free!</p>
+  </section>
+
+  <section class="right">
+    <form id="signupForm" novalidate>
+      <h2>Sign Up</h2>
+
+      <div class="field" id="email-field">
+        <input type="email" id="email" placeholder="Email" autocomplete="email" required>
+        <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5z"/></svg>
+      </div>
+
+      <div class="field">
+        <input type="text" id="username" placeholder="Username" autocomplete="username" required>
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 3a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm0 14.2a7.2 7.2 0 0 1-6-3.2c0-2 4-3.1 6-3.1s6 1.1 6 3.1a7.2 7.2 0 0 1-6 3.2z"/></svg>
+      </div>
+
+      <div class="field">
+        <input type="password" id="password" placeholder="Password" autocomplete="new-password" minlength="6" required>
+        <svg viewBox="0 0 24 24"><path d="M18 8h-1V6a5 5 0 0 0-10 0v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zM9 6a3 3 0 0 1 6 0v2H9V6zm3 11a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg>
+      </div>
+
+      <label class="terms" id="terms-field">
+        <input type="checkbox" id="agree">
+        <span>I Agree To <b>Terms</b> And <b>Conditions</b> Of Service</span>
+      </label>
+
+      <div class="actions">
+        <button type="submit" class="btn">Sign Up &gt;</button>
+        <a href="#" class="link" id="toggle-link">Have An Account?</a>
+      </div>
+
+      <p class="msg" id="msg"></p>
+    </form>
+  </section>
+</div>
+
+<script>
+  const form = document.getElementById('signupForm');
+  const msg = document.getElementById('msg');
+  const headingText = document.querySelector('.left h1');
+  const descText = document.querySelector('.left p');
+  const formTitle = document.querySelector('.right h2');
+  const submitBtn = document.querySelector('.actions .btn');
+  const toggleLink = document.getElementById('toggle-link');
+  const emailField = document.getElementById('email-field');
+  const termsField = document.getElementById('terms-field');
+
+  let isLoginMode = false;
+
+  // Rejimni almashtirish (Sign Up <-> Log In)
+  toggleLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    isLoginMode = !isLoginMode;
+    msg.textContent = "";
+
+    if (isLoginMode) {
+      formTitle.textContent = "Log In";
+      submitBtn.textContent = "Log In >";
+      toggleLink.textContent = "Don't Have An Account?";
+      headingText.textContent = "Welcome Back!";
+      descText.textContent = "Log in to access your cosmic dashboard and explore the galaxy.";
+      emailField.style.display = "none";
+      termsField.style.display = "none";
+    } else {
+      formTitle.textContent = "Sign Up";
+      submitBtn.textContent = "Sign Up >";
+      toggleLink.textContent = "Have An Account?";
+      headingText.textContent = "Don't Have An Account?";
+      descText.textContent = "Register to access all the features of our service. Manage your business in one place. It's free!";
+      emailField.style.display = "block";
+      termsField.style.display = "flex";
+    }
+  });
+
+  // Serverga so'rov yuborish
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    
+    msg.style.color = '#ffd27a';
+
+    if (username.length < 3) return msg.textContent = "Username must be at least 3 characters.";
+    if (password.length < 6) return msg.textContent = "Password must be at least 6 characters.";
+
+    let endpoint = '/api/signup';
+    let payload = { username, password };
+
+    if (!isLoginMode) {
+      const email = document.getElementById('email').value.trim();
+      const agree = document.getElementById('agree').checked;
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return msg.textContent = "Please enter a valid email.";
+      if (!agree) return msg.textContent = "Please accept the terms to continue.";
+      payload.email = email;
+    } else {
+      endpoint = '/api/login';
+    }
+
+    try {
+      // To'g'ridan-to'g'ri Flask server manziliga so'rov yuborish
+      const response = await fetch('http://127.0.0.1:5000' + endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        msg.style.color = '#9fe6a0';
+        msg.textContent = data.message;
+
+        if (isLoginMode) {
+          // Tizimga kirilsa dashboardga yo'naltirish
+          setTimeout(() => {
+            window.location.href = "/dashboard";
+          }, 800);
+        } else {
+          // Ro'yxatdan o'tilsa Login rejimiga o'tkazish
+          setTimeout(() => {
+            toggleLink.click();
+            msg.style.color = '#9fe6a0';
+            msg.textContent = "Registration successful! Please log in.";
+          }, 1000);
+        }
+      } else {
+        msg.style.color = '#f87171';
+        msg.textContent = data.error || "Something went wrong.";
+      }
+    } catch (err) {
+      msg.style.color = '#f87171';
+      msg.textContent = "Network error. Server is not responding.";
+    }
+  });
+</script>
+</body>
+</html>
